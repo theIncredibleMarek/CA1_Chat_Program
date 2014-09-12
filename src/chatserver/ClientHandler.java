@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import shared.ProtocolStrings;
@@ -20,6 +22,9 @@ public class ClientHandler extends Thread
     Socket socket;
     private String name;
     boolean isActive;
+//    Timer t;
+    boolean isConnected = true;
+//    boolean isTimerStarted = false;
 
     public ClientHandler(Socket socket) throws IOException
     {
@@ -27,6 +32,8 @@ public class ClientHandler extends Thread
         writer = new PrintWriter(socket.getOutputStream(), true);
         this.socket = socket;
         isActive = true;
+//        t = new Timer();
+
     }
 
     @Override
@@ -38,11 +45,17 @@ public class ClientHandler extends Thread
 ////        while(!message.equals(ProtocolStrings.STOP))
         while (isActive)
         {
-            message = input.nextLine(); //IMPORTANT blocking call
-            Logger.getLogger(ChatServer.class.getName()).log(Level.INFO, String.format("Received the message: %1$S ", message.toUpperCase()));
-            decode(message);
+            try
+            {
+                message = input.nextLine(); //IMPORTANT blocking call
+//                removeTimer(t);
+                Logger.getLogger(ChatServer.class.getName()).log(Level.INFO, String.format("Received the message: %1$S ", message.toUpperCase()));
+                decode(message);
+                // message = input.nextLine(); //IMPORTANT blocking call
 
-            // message = input.nextLine(); //IMPORTANT blocking call
+            } catch (Exception e)
+            {
+            }
         }
         //writer.println(ProtocolStrings.STOP);//Echo the stop message back to the client for a nice closedown
         try
@@ -52,7 +65,9 @@ public class ClientHandler extends Thread
         {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Logger.getLogger(ChatServer.class.getName()).log(Level.INFO, "Closed a Connection");
+
+        Logger.getLogger(ChatServer.class
+                .getName()).log(Level.INFO, "Closed a Connection with " + name);
     }
 
     public String getClientName()
@@ -77,18 +92,24 @@ public class ClientHandler extends Thread
         switch (command)
         {
             case ProtocolStrings.CONNECT:
-                //write back the list of users send("ONLINE#Marek,Smara","*")
-                //message must have a name after the connect
-                if (msgParts.length > 1)
+                if (isConnected)
                 {
-                    name = msgParts[1];
-                    //ch.setClientName(msgParts[1]);
-                    ChatServer.addHandler(this);
-                    ChatServer.send(ProtocolStrings.ONLINE, new String[]
+                    //write back the list of users send("ONLINE#Marek,Smara","*")
+                    //message must have a name after the connect
+                    if (msgParts.length > 1)
                     {
-                        ProtocolStrings.EVERYBODY
-                    });
+                        name = msgParts[1];
+                        //ch.setClientName(msgParts[1]);
+                        ChatServer.addHandler(this);
+                        ChatServer.send(ProtocolStrings.ONLINE, new String[]
+                        {
+                            ProtocolStrings.EVERYBODY
+                        });
+
+                        isConnected = false;
+                    }
                 }
+//                startTimer(t);
                 break;
             case ProtocolStrings.SEND:
                 //message must contain the names of recipients and also the message
@@ -97,12 +118,15 @@ public class ClientHandler extends Thread
                     String[] recipients = msgParts[1].split(",");
                     String message = ProtocolStrings.MESSAGE + ProtocolStrings.DIVIDER + name + ProtocolStrings.DIVIDER + msgParts[2];
                     ChatServer.send(message, recipients);
-                    break;
+
                 }
+//                startTimer(t);
+                break;
             case ProtocolStrings.CLOSE:
                 //message must be ended with a #
                 if (msg.equals(ProtocolStrings.STOP))
                 {
+//                    removeTimer(t);
                     isActive = false;
                     //send a remove statement to the caller
                     ChatServer.send(ProtocolStrings.CLOSE, new String[]
@@ -111,15 +135,44 @@ public class ClientHandler extends Thread
                     });
                     //remove him from the clienthandlers in server
                     ChatServer.removeHandler(this);
+                    
                     //after user disconects, the message with the new ONLINE user list will be sent out to others
                     ChatServer.send(ProtocolStrings.ONLINE, new String[]
                     {
                         ProtocolStrings.EVERYBODY
                     });
+                     Logger.getLogger(ChatServer.class
+                .getName()).log(Level.INFO, "Closed a Connection with " + name);
                 }
+//                else
+//                {
+//                startTimer(t);
+//                }
                 break;
             default:
                 break;
         }
     }
+
+//    public void startTimer(Timer t)
+//    {
+//        isTimerStarted = true;
+//
+//        t.schedule(new TimerTask()
+//        {
+//            @Override
+//            public void run()
+//            {
+//                decode(ProtocolStrings.STOP);
+//            }
+//        }, ProtocolStrings.ServerTimeout);
+//    }
+//
+//    public void removeTimer(Timer t)
+//    {
+//        if (isTimerStarted)
+//        {
+//            t.cancel();
+//        }
+//    }
 }

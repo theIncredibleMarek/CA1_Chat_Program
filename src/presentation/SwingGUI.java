@@ -58,7 +58,7 @@ public class SwingGUI extends javax.swing.JFrame implements MessageListener
 
         portLabel.setText("Port");
 
-        portTextField.setText("9080");
+        portTextField.setText("59156");
         portTextField.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -219,7 +219,10 @@ public class SwingGUI extends javax.swing.JFrame implements MessageListener
 
     private void formWindowClosing(java.awt.event.WindowEvent evt)//GEN-FIRST:event_formWindowClosing
     {//GEN-HEADEREND:event_formWindowClosing
+        if(connectButton.getText().equals("Disconnect"))
+        {
         client.unRegisterEchoListener(this);
+        }
     }//GEN-LAST:event_formWindowClosing
 
     private void portTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_portTextFieldActionPerformed
