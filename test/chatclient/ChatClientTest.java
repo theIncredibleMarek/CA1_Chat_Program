@@ -101,7 +101,7 @@ public class ChatClientTest
     }
 
     /**
-     * Test of registerEchoListener method, of class ChatClient.
+     * Test of registerMessageListener method, of class ChatClient.
      */
     @Test
     public void testRegisterEchoListener()
@@ -109,13 +109,13 @@ public class ChatClientTest
         System.out.println("registerEchoListener");
         MessageListener l = null;
         ChatClient instance = new ChatClient();
-        instance.registerEchoListener(l);
+        instance.registerMessageListener(l);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of unRegisterEchoListener method, of class ChatClient.
+     * Test of unRegisterMessageListener method, of class ChatClient.
      */
     @Test
     public void testUnRegisterEchoListener()
@@ -123,7 +123,7 @@ public class ChatClientTest
         System.out.println("unRegisterEchoListener");
         MessageListener l = null;
         ChatClient instance = new ChatClient();
-        instance.unRegisterEchoListener(l);
+        instance.unRegisterMessageListener(l);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }

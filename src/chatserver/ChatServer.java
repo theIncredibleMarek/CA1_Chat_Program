@@ -39,7 +39,6 @@ public class ChatServer
     {
         clientHandlers.put(ch.getClientName(), ch);
         System.out.println(getNbOfConnectedUsers());
-//        ch.start();
     }
 
     public static void stopServer()
@@ -85,7 +84,16 @@ public class ChatServer
         }
 
         //2.notify the recipients of the message
-        if (recipients[0].equals(ProtocolStrings.EVERYBODY))
+        boolean msgToEverybody = false;
+        for (String s : recipients)
+        {
+            if (s.equals("*"))
+            {
+                msgToEverybody = true;
+                break;
+            }
+        }
+        if (msgToEverybody)
         {
             for (Map.Entry<String, ClientHandler> ch : clientHandlers.entrySet())
             {
@@ -98,7 +106,7 @@ public class ChatServer
                 }
                 else
                 {
-                       ch.getValue().send(msg);
+                    ch.getValue().send(msg);
                 }
             }
         }
@@ -108,9 +116,21 @@ public class ChatServer
             {
                 for (Map.Entry<String, ClientHandler> ch : clientHandlers.entrySet())
                 {
-                    if (ch.getKey().equals(s))
+                    if (msgParts.length > 1)
                     {
-                        ch.getValue().send(msg);
+                        //send the message but not to the sender itself
+                        if ( ch.getKey().equals(s) && ! ch.getKey().equals(msgParts[1]))
+                        {
+                            ch.getValue().send(msg);
+                        }
+                    }
+                    else
+                    {
+                        //in case that the message is CLOSE it will not have the receivers
+                        if ( ch.getKey().equals(s))
+                        {
+                            ch.getValue().send(msg);
+                        }
                     }
                 }
             }
@@ -121,12 +141,12 @@ public class ChatServer
     {
         return clientHandlers.size();
     }
-    
+
     public static String[] getConnectedUsers()
     {
         String[] connectedUsers = new String[clientHandlers.size()];
-        int i=0;
-        for(Map.Entry<String, ClientHandler> ch : clientHandlers.entrySet())
+        int i = 0;
+        for (Map.Entry<String, ClientHandler> ch : clientHandlers.entrySet())
         {
             connectedUsers[i] = ch.getKey();
             i++;
@@ -141,7 +161,7 @@ public class ChatServer
         String logFile = properties.getProperty("logFile");
         Utils.setLogFile(logFile, ChatServer.class.getName());
         Logger logger = Utils.getLogger(logFile, ChatServer.class.getName());
-        Logger.getLogger(ChatServer.class.getName()).log(Level.INFO, "Sever started");
+        Logger.getLogger(ChatServer.class.getName()).log(Level.INFO, "Server started");
         clientHandlers = new HashMap<String, ClientHandler>()
         {
         };

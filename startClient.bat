@@ -1,1 +1,1 @@
-java -cp Echo.jar presentation.SwingGUI 9090 localhost
+java -cp CA1_Chat_Program.jar presentation.SwingGUI

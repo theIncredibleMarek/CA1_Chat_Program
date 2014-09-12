@@ -13,5 +13,6 @@ public class ProtocolStrings
     public static final String MESSAGE = "MESSAGE";
     public static final String EVERYBODY = "*";
     public static final String DIVIDER = "#";
+    public static final String JARNAME = "CA1_Chat_Program";
     public static final long ServerTimeout = 20000;
 }

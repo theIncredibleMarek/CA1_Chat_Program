@@ -20,6 +20,8 @@ public class SwingGUI extends javax.swing.JFrame implements MessageListener
     {
         client = new ChatClient();
         initComponents();
+        ipTextField.setText(client.getDefaultIP());
+        portTextField.setText("" + client.getDefaultPort());
     }
 
     @SuppressWarnings("unchecked")
@@ -54,18 +56,7 @@ public class SwingGUI extends javax.swing.JFrame implements MessageListener
 
         ipLabel.setText("IP");
 
-        ipTextField.setText("127.0.0.1");
-
         portLabel.setText("Port");
-
-        portTextField.setText("59156");
-        portTextField.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                portTextFieldActionPerformed(evt);
-            }
-        });
 
         connectButton.setText("Connect");
         connectButton.addActionListener(new java.awt.event.ActionListener()
@@ -106,6 +97,14 @@ public class SwingGUI extends javax.swing.JFrame implements MessageListener
 
         userLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         userLabel.setText("Userlist");
+
+        usernameTextField.addKeyListener(new java.awt.event.KeyAdapter()
+        {
+            public void keyPressed(java.awt.event.KeyEvent evt)
+            {
+                usernameTextFieldKeyPressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -176,28 +175,35 @@ public class SwingGUI extends javax.swing.JFrame implements MessageListener
     }//GEN-LAST:event_messageTextFieldKeyPressed
 
     private void connectButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_connectButtonActionPerformed
-                {//GEN-HEADEREND:event_connectButtonActionPerformed
-            if (connectButton.getText().equals("Connect"))
+    {//GEN-HEADEREND:event_connectButtonActionPerformed
+        if (connectButton.getText().equals("Connect"))
+        {
+            try
             {
-                try
-                {
-                    client.connect(ipTextField.getText(), Integer.parseInt(portTextField.getText()), usernameTextField.getText());
-                    client.registerEchoListener(this);
-                    connectButton.setText("Disconnect");
-                    usernameTextField.setEditable(false);
-                    chatTextArea.append("You are now connected to the chat. \n");
-                } catch (IOException ex)
-                {
-                    Logger.getLogger(SwingGUI.class.getName()).log(Level.SEVERE, null, ex);
-                    JOptionPane.showMessageDialog(new JFrame(), "Could not connect to server!", "Dialog", JOptionPane.ERROR_MESSAGE);
-                }
+                client.connect(ipTextField.getText(), Integer.parseInt(portTextField.getText()), usernameTextField.getText());
+                client.registerMessageListener(this);
+                connectButton.setText("Disconnect");
+                usernameTextField.setEditable(false);
+                chatTextArea.append("You are now connected to the chat. \n");
+            } catch (IOException ex)
+            {
+                Logger.getLogger(SwingGUI.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(new JFrame(), "Could not connect to server!", "Dialog", JOptionPane.ERROR_MESSAGE);
             }
-            else
+        }
+        else
+        {
+            try
             {
-                client.unRegisterEchoListener(this);
+                client.unRegisterMessageListener(this);
                 usernameTextField.setEditable(true);
                 connectButton.setText("Connect");
+            } catch (IOException ex)
+            {
+                Logger.getLogger(SwingGUI.class.getName()).log(Level.SEVERE, null, ex);
+                chatTextArea.append("There was an error disconnecting. \n");
             }
+        }
     }//GEN-LAST:event_connectButtonActionPerformed
 
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_sendButtonActionPerformed
@@ -211,7 +217,7 @@ public class SwingGUI extends javax.swing.JFrame implements MessageListener
                 receiverz += o.toString() + ",";
             }
             receiverz = receiverz.substring(0, receiverz.length() - 1);
-            client.send(ProtocolStrings.SEND+ProtocolStrings.DIVIDER + receiverz + ProtocolStrings.DIVIDER + messageTextField.getText());
+            client.send(ProtocolStrings.SEND + ProtocolStrings.DIVIDER + receiverz + ProtocolStrings.DIVIDER + messageTextField.getText());
             chatTextArea.append(usernameTextField.getText() + ": " + messageTextField.getText() + "\n");
             messageTextField.setText(null);
         }
@@ -219,15 +225,27 @@ public class SwingGUI extends javax.swing.JFrame implements MessageListener
 
     private void formWindowClosing(java.awt.event.WindowEvent evt)//GEN-FIRST:event_formWindowClosing
     {//GEN-HEADEREND:event_formWindowClosing
-        if(connectButton.getText().equals("Disconnect"))
+        if (connectButton.getText().equals("Disconnect"))
         {
-        client.unRegisterEchoListener(this);
+            try
+            {
+                client.unRegisterMessageListener(this);
+                client.closeTheConnection();
+            } catch (IOException ex)
+            {
+                chatTextArea.append("There was an error disconnecting. \n");
+                Logger.getLogger(SwingGUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_formWindowClosing
 
-    private void portTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_portTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_portTextFieldActionPerformed
+    private void usernameTextFieldKeyPressed(java.awt.event.KeyEvent evt)//GEN-FIRST:event_usernameTextFieldKeyPressed
+    {//GEN-HEADEREND:event_usernameTextFieldKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER && !usernameTextField.getText().isEmpty() && connectButton.getText().equals("Connect"))
+        {
+            connectButton.doClick();
+        }
+    }//GEN-LAST:event_usernameTextFieldKeyPressed
 
     /**
      * @param args the command line arguments
@@ -333,5 +351,4 @@ public class SwingGUI extends javax.swing.JFrame implements MessageListener
                 break;
         }
     }
-
 }

@@ -55,6 +55,9 @@ public class ClientHandler extends Thread
 
             } catch (Exception e)
             {
+               Logger.getLogger(ChatServer.class.getName()).log(Level.INFO,e.getMessage());
+                Logger.getLogger(ChatServer.class
+                .getName()).log(Level.INFO, name + " has an error" + e.getMessage().toString());
             }
         }
         //writer.println(ProtocolStrings.STOP);//Echo the stop message back to the client for a nice closedown

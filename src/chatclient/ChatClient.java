@@ -7,10 +7,12 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import shared.ProtocolStrings;
+import utils.Utils;
 
 public class ChatClient extends Thread
 {
@@ -22,6 +24,12 @@ public class ChatClient extends Thread
     private Scanner input;
     private PrintWriter output;
     private List<MessageListener> listeners = new ArrayList();
+    private static Properties properties;
+    
+    public ChatClient()
+    {
+        properties = Utils.initProperties("server.properties");
+    }
 
     public void connect(String address, int port, String username) throws UnknownHostException, IOException
     {
@@ -42,7 +50,7 @@ public class ChatClient extends Thread
 
     public void closeTheConnection() throws IOException
     {
-        output.println(ProtocolStrings.CLOSE);
+        output.println(ProtocolStrings.STOP);
     }
 
     @Override
@@ -65,15 +73,15 @@ public class ChatClient extends Thread
         }
     }
 
-    public void registerEchoListener(MessageListener l)
+    public void registerMessageListener(MessageListener l)
     {
         listeners.add(l);
     }
 
-    public void unRegisterEchoListener(MessageListener l)
+    public void unRegisterMessageListener(MessageListener l) throws IOException
     {
+        
         listeners.remove(l);
-        send(ProtocolStrings.CLOSE+ProtocolStrings.DIVIDER);
     }
 
     private void notifyListeners(String msg)
@@ -84,29 +92,13 @@ public class ChatClient extends Thread
         }
     }
 
-    public static void main(String[] args)
+    public String getDefaultIP()
     {
-//        int port = 9090;
-//        String ip = "localhost";
-//        if (args.length == 2) {
-//            port = Integer.parseInt(args[0]);
-//            ip = args[1];
-//        }
-//        try {
-//            ChatClient client = new ChatClient();
-//            View tester = new View();
-//            tester.setVisible(true);
-//            client.registerEchoListener(tester);
-//            client.connect(ip, port);
-//            System.out.println("Sending 'Hello world'");
-//            client.send("Hello World");
-//            System.out.println("Waiting for a reply");
-//            client.stopIt();
-//            //System.in.read();      
-//        } catch (UnknownHostException ex) {
-//            Logger.getLogger(ChatClient.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (IOException ex) {
-//            Logger.getLogger(ChatClient.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        return properties.getProperty("serverHostname");
+    }
+    
+    public int getDefaultPort()
+    {
+        return Integer.parseInt(properties.getProperty("chatProgramPort"));
     }
 }

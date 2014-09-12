@@ -1,14 +1,16 @@
-sep 12, 2014 10:56:15 AM chatserver.ChatServer start
-INFO: Sever started
-sep 12, 2014 10:56:25 AM chatserver.ChatServer start
+Sep 12, 2014 4:18:29 PM chatserver.ChatServer start
+INFO: Server started
+Sep 12, 2014 4:18:49 PM chatserver.ChatServer start
 INFO: Connected to a client
-sep 12, 2014 10:56:27 AM chatserver.ClientHandler run
+Sep 12, 2014 4:18:49 PM chatserver.ClientHandler run
+INFO: Received the message: CONNECT#ME 
+Sep 12, 2014 4:19:02 PM chatserver.ClientHandler run
+INFO: Received the message: SEND#*#DDFASD 
+Sep 12, 2014 4:19:03 PM chatserver.ClientHandler run
+INFO: Received the message: CLOSE 
+Sep 12, 2014 4:20:14 PM chatserver.ChatServer start
+INFO: Connected to a client
+Sep 12, 2014 4:20:14 PM chatserver.ClientHandler run
 INFO: Received the message: CONNECT#MAREK 
-sep 12, 2014 10:56:35 AM chatserver.ClientHandler run
-INFO: Received the message: SEND#*#ASDF 
-sep 12, 2014 10:57:31 AM chatserver.ClientHandler run
-INFO: Received the message: CLOSE# 
-sep 12, 2014 10:57:36 AM chatserver.ClientHandler decode
-INFO: Closed a Connection with marek
-sep 12, 2014 10:57:36 AM chatserver.ClientHandler run
-INFO: Closed a Connection with marek
+Sep 12, 2014 4:20:17 PM chatserver.ClientHandler run
+INFO: Received the message: CLOSE 

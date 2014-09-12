@@ -97,9 +97,6 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="ipTextField">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="127.0.0.1"/>
-      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="portLabel">
       <Properties>
@@ -107,12 +104,6 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="portTextField">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="59156"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="portTextFieldActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="connectButton">
       <Properties>
@@ -181,6 +172,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="usernameTextField">
+      <Events>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="usernameTextFieldKeyPressed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
