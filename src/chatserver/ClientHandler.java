@@ -135,14 +135,14 @@ public class ClientHandler extends Thread
                     });
                     //remove him from the clienthandlers in server
                     ChatServer.removeHandler(this);
-                    
+
                     //after user disconects, the message with the new ONLINE user list will be sent out to others
                     ChatServer.send(ProtocolStrings.ONLINE, new String[]
                     {
                         ProtocolStrings.EVERYBODY
                     });
-                     Logger.getLogger(ChatServer.class
-                .getName()).log(Level.INFO, "Closed a Connection with " + name);
+                    Logger.getLogger(ChatServer.class
+                            .getName()).log(Level.INFO, "Closed a Connection with " + name);
                 }
 //                else
 //                {

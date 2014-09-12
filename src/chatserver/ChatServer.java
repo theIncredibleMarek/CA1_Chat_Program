@@ -68,14 +68,14 @@ public class ChatServer
 
                 break;
             case ProtocolStrings.MESSAGE:
-                //in case the message is sent to everybody the sender should not get it back - we exclude him from the list of recipients
-                msg = msg + ProtocolStrings.DIVIDER;
-                for (String s : recipients)
-                {
-                    msg = msg + s + ",";
-                }
-                //At the end the last person will have a comma after his name so we just have to remove it
-                msg = msg.substring(0, msg.length() - 1);
+//                //in case the message is sent to everybody the sender should not get it back - we exclude him from the list of recipients
+//                msg = msg + ProtocolStrings.DIVIDER;
+//                for (String s : recipients)
+//                {
+//                    msg = msg + s + ",";
+//                }
+//                //At the end the last person will have a comma after his name so we just have to remove it
+//                msg = msg.substring(0, msg.length() - 1);
                 break;
             case ProtocolStrings.CLOSE:
                 msg = msg + ProtocolStrings.DIVIDER;
@@ -120,6 +120,18 @@ public class ChatServer
     public static int getNbOfConnectedUsers()
     {
         return clientHandlers.size();
+    }
+    
+    public static String[] getConnectedUsers()
+    {
+        String[] connectedUsers = new String[clientHandlers.size()];
+        int i=0;
+        for(Map.Entry<String, ClientHandler> ch : clientHandlers.entrySet())
+        {
+            connectedUsers[i] = ch.getKey();
+            i++;
+        }
+        return connectedUsers;
     }
 
     public void start()

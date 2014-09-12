@@ -29,16 +29,15 @@ public class WebServer {
         Properties properties = Utils.initProperties("server.properties");
         ip = properties.getProperty("serverIp");
 //        port = Integer.parseInt(properties.getProperty("port"));
-       port = Integer.parseInt(properties.getProperty("webServerPort"));
+        port = Integer.parseInt(properties.getProperty("webServerPort"));
 //        String logFile = properties.getProperty("logFile");
 
 //        InetSocketAddress i = new InetSocketAddress("127.0.0.1", 8080);
         InetSocketAddress i = new InetSocketAddress(ip, port);
         HttpServer server = HttpServer.create(i, 0);
         server.createContext("/index.html", new WelcomeHandler());
-        server.createContext("/CA1.jar", new WelcomeHandler());
+        server.createContext("/CA1_Chat_Program.jar", new WelcomeHandler());
         server.createContext("/chatLog.txt", new WelcomeHandler());
-        server.createContext("/chatLog", new ChatLogHandler());
         server.createContext("/status", new OnlineUsersHandler());
         server.setExecutor(null);
         server.start();
@@ -89,32 +88,6 @@ public class WebServer {
             }
         }
     }
-    
-    static class ChatLogHandler implements HttpHandler {
-
-        @Override
-        public void handle(HttpExchange he) throws IOException {
-            StringBuilder sb = new StringBuilder();
-            sb.append("<!DOCTYPE html>\n");
-            sb.append("<html>\n");
-            sb.append("<head>\n");
-            sb.append("<title>Chat log information</title>\n");
-            sb.append("<meta charset='UTF-8'>\n");
-            sb.append("</head>\n");
-            sb.append("<body>\n");
-            sb.append("<h2>This should work, but java...</h2>\n");
-            sb.append("</body>\n");
-            sb.append("</html>\n");
-
-            String response = sb.toString();
-            Headers h = he.getResponseHeaders();
-            h.add("Content-Type", "text/html");
-            he.sendResponseHeaders(200, response.length());
-            try (PrintWriter pw = new PrintWriter(he.getResponseBody())) {
-                pw.print(response);
-            }
-        }
-    }
 
     static class OnlineUsersHandler implements HttpHandler {
 
@@ -122,6 +95,7 @@ public class WebServer {
         public void handle(HttpExchange he) throws IOException {
 //            String response = "Welcome to my first http server!";
 //            he.   // here we can add more details to the header
+            String[] onlineUsers = ChatServer.getConnectedUsers();
             StringBuilder sb = new StringBuilder();
             sb.append("<!DOCTYPE html>\n");
             sb.append("<html>\n");
@@ -130,10 +104,14 @@ public class WebServer {
             sb.append("<meta charset='UTF-8'>\n");
             sb.append("</head>\n");
             sb.append("<body>\n");
-//            String connected = "" + chatSV.getNbOfConnectedUsers();
-//            int connected = chatSV.getNbOfConnectedUsers();
-//            sb.append("<h2>").append(connected).append("</h2>\n");
-            sb.append("<h2>This should work, but java...</h2>\n");
+            sb.append("<h2>Number of online users: ").append(ChatServer.getNbOfConnectedUsers()).append("</h2>\n");
+            sb.append("<table>");
+            for (String user : onlineUsers) {
+                sb.append("<tr>");
+                sb.append("<td>").append(user).append("</td>");
+                sb.append("</tr>");
+            }
+            sb.append("</table>");
             sb.append("</body>\n");
             sb.append("</html>\n");
 
