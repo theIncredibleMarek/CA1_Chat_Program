@@ -13,6 +13,8 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import utils.Utils;
 
 /**
@@ -41,8 +43,8 @@ public class WebServer {
         server.createContext("/status", new OnlineUsersHandler());
         server.setExecutor(null);
         server.start();
-        System.out.println("zee server was started, haha xD");
-        System.out.println("bound to " + ip + ", listening on port " + port);
+        Logger.getLogger(WebServer.class.getName()).log(Level.INFO, "Web server started,\n" + 
+                "ip: " + ip + ", listening on port: " + port + ".");
         ChatServer.getInstance().start();
     }
 

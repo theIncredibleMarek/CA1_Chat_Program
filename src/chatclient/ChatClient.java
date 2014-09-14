@@ -25,7 +25,7 @@ public class ChatClient extends Thread
     private PrintWriter output;
     private List<MessageListener> listeners = new ArrayList();
     private static Properties properties;
-    
+
     public ChatClient()
     {
         properties = Utils.initProperties("server.properties");
@@ -39,8 +39,11 @@ public class ChatClient extends Thread
         socket = new Socket(serverAddress, port);
         input = new Scanner(socket.getInputStream());
         output = new PrintWriter(socket.getOutputStream(), true);  //Set to true, to get auto flush behaviour
-        send(ProtocolStrings.CONNECT+ProtocolStrings.DIVIDER +username);
-        start();
+        send(ProtocolStrings.CONNECT + ProtocolStrings.DIVIDER + username);
+        if (getState().toString().equals("RUNNABLE") || getState().toString().equals("NEW"))
+        {
+            start();
+        }
     }
 
     public void send(String msg)
@@ -51,6 +54,7 @@ public class ChatClient extends Thread
     public void closeTheConnection() throws IOException
     {
         output.println(ProtocolStrings.STOP);
+        stop();
     }
 
     @Override
@@ -63,7 +67,7 @@ public class ChatClient extends Thread
             msg = input.nextLine();
         }
         notifyListeners(msg);
-        
+
         try
         {
             socket.close();
@@ -80,7 +84,6 @@ public class ChatClient extends Thread
 
     public void unRegisterMessageListener(MessageListener l) throws IOException
     {
-        
         listeners.remove(l);
     }
 
@@ -96,7 +99,7 @@ public class ChatClient extends Thread
     {
         return properties.getProperty("serverHostname");
     }
-    
+
     public int getDefaultPort()
     {
         return Integer.parseInt(properties.getProperty("chatProgramPort"));

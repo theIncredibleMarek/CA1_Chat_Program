@@ -161,7 +161,8 @@ public class ChatServer
         String logFile = properties.getProperty("logFile");
         Utils.setLogFile(logFile, ChatServer.class.getName());
         Logger logger = Utils.getLogger(logFile, ChatServer.class.getName());
-        Logger.getLogger(ChatServer.class.getName()).log(Level.INFO, "Server started");
+        Logger.getLogger(ChatServer.class.getName()).log(Level.INFO, "Chat server started,\n" +
+                "ip: " + ip + ", listening on port: " + port + ".");
         clientHandlers = new HashMap<String, ClientHandler>()
         {
         };

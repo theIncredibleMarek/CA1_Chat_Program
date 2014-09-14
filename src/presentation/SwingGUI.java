@@ -178,17 +178,22 @@ public class SwingGUI extends javax.swing.JFrame implements MessageListener
     {//GEN-HEADEREND:event_connectButtonActionPerformed
         if (connectButton.getText().equals("Connect"))
         {
-            try
+            if (!usernameTextField.getText().isEmpty())
             {
-                client.connect(ipTextField.getText(), Integer.parseInt(portTextField.getText()), usernameTextField.getText());
-                client.registerMessageListener(this);
-                connectButton.setText("Disconnect");
-                usernameTextField.setEditable(false);
-                chatTextArea.append("You are now connected to the chat. \n");
-            } catch (IOException ex)
-            {
-                Logger.getLogger(SwingGUI.class.getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showMessageDialog(new JFrame(), "Could not connect to server!", "Dialog", JOptionPane.ERROR_MESSAGE);
+                try
+                {
+                    client.connect(ipTextField.getText(), Integer.parseInt(portTextField.getText()), usernameTextField.getText());
+                    client.registerMessageListener(this);
+                    connectButton.setText("Disconnect");
+                    ipTextField.setEditable(false);
+                    portTextField.setEditable(false);
+                    usernameTextField.setEditable(false);
+                    chatTextArea.append("You are now connected to the chat. \n");
+                } catch (IOException ex)
+                {
+                    Logger.getLogger(SwingGUI.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(new JFrame(), "Could not connect to server!", "Dialog", JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
         else
@@ -196,8 +201,15 @@ public class SwingGUI extends javax.swing.JFrame implements MessageListener
             try
             {
                 client.unRegisterMessageListener(this);
+                client.closeTheConnection();
+                ipTextField.setEditable(true);
+                portTextField.setEditable(true);
                 usernameTextField.setEditable(true);
                 connectButton.setText("Connect");
+                chatTextArea.setText("");
+//                DefaultListModel model = new DefaultListModel();
+//                usersList.setModel(model);
+//                usersList.setModel(new DefaultListModel());
             } catch (IOException ex)
             {
                 Logger.getLogger(SwingGUI.class.getName()).log(Level.SEVERE, null, ex);
