@@ -20,8 +20,10 @@ public class SwingGUI extends javax.swing.JFrame implements MessageListener
     {
         client = new ChatClient();
         initComponents();
-        ipTextField.setText(client.getDefaultIP());
-        portTextField.setText("" + client.getDefaultPort());
+        ipTextField.setText("cnlearning.cloudapp.net");
+        portTextField.setText("9999");
+//        ipTextField.setText(client.getDefaultIP());
+//        portTextField.setText("" + client.getDefaultPort());
     }
 
     @SuppressWarnings("unchecked")
@@ -46,6 +48,16 @@ public class SwingGUI extends javax.swing.JFrame implements MessageListener
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("ChatClient");
+        addWindowFocusListener(new java.awt.event.WindowFocusListener()
+        {
+            public void windowGainedFocus(java.awt.event.WindowEvent evt)
+            {
+                formWindowGainedFocus(evt);
+            }
+            public void windowLostFocus(java.awt.event.WindowEvent evt)
+            {
+            }
+        });
         addWindowListener(new java.awt.event.WindowAdapter()
         {
             public void windowClosing(java.awt.event.WindowEvent evt)
@@ -195,8 +207,7 @@ public class SwingGUI extends javax.swing.JFrame implements MessageListener
                     JOptionPane.showMessageDialog(new JFrame(), "Could not connect to server!", "Dialog", JOptionPane.ERROR_MESSAGE);
                 }
             }
-        }
-        else
+        } else
         {
             try
             {
@@ -207,6 +218,8 @@ public class SwingGUI extends javax.swing.JFrame implements MessageListener
                 usernameTextField.setEditable(true);
                 connectButton.setText("Connect");
                 chatTextArea.setText("");
+//                DefaultListModel model = (DefaultListModel) usersList.getModel();
+//                model.clear();
 //                DefaultListModel model = new DefaultListModel();
 //                usersList.setModel(model);
 //                usersList.setModel(new DefaultListModel());
@@ -258,6 +271,17 @@ public class SwingGUI extends javax.swing.JFrame implements MessageListener
             connectButton.doClick();
         }
     }//GEN-LAST:event_usernameTextFieldKeyPressed
+
+    private void formWindowGainedFocus(java.awt.event.WindowEvent evt)//GEN-FIRST:event_formWindowGainedFocus
+    {//GEN-HEADEREND:event_formWindowGainedFocus
+        if (usernameTextField.getText().isEmpty())
+        {
+            usernameTextField.requestFocus();
+        } else
+        {
+            messageTextField.requestFocus();
+        }
+    }//GEN-LAST:event_formWindowGainedFocus
 
     /**
      * @param args the command line arguments

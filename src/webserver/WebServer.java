@@ -39,6 +39,7 @@ public class WebServer {
         HttpServer server = HttpServer.create(i, 0);
         server.createContext("/index.html", new WelcomeHandler());
         server.createContext("/CA1_Chat_Program.jar", new WelcomeHandler());
+        server.createContext("/CA-Chat-documentation.pdf", new WelcomeHandler());
         server.createContext("/chatLog.txt", new WelcomeHandler());
         server.createContext("/status", new OnlineUsersHandler());
         server.setExecutor(null);

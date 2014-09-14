@@ -1,16 +1,43 @@
-sep 14, 2014 3:32:05 PM chatserver.ChatServer start
+sep 14, 2014 6:05:18 PM chatserver.ChatServer start
 INFO: Chat server started,
 ip: localhost, listening on port: 9999.
-sep 14, 2014 3:32:05 PM chatserver.ChatServer start
-SEVERE: null
-java.net.BindException: Address already in use: JVM_Bind
-	at java.net.DualStackPlainSocketImpl.bind0(Native Method)
-	at java.net.DualStackPlainSocketImpl.socketBind(DualStackPlainSocketImpl.java:106)
-	at java.net.AbstractPlainSocketImpl.bind(AbstractPlainSocketImpl.java:376)
-	at java.net.PlainSocketImpl.bind(PlainSocketImpl.java:190)
-	at java.net.ServerSocket.bind(ServerSocket.java:376)
-	at java.net.ServerSocket.bind(ServerSocket.java:330)
-	at chatserver.ChatServer.start(ChatServer.java:169)
-	at chatclient.ChatClientTest$1.run(ChatClientTest.java:62)
-	at java.lang.Thread.run(Thread.java:744)
-
+sep 14, 2014 6:05:34 PM chatserver.ChatServer start
+INFO: Connected to a client
+sep 14, 2014 6:05:34 PM chatserver.ClientHandler run
+INFO: Received the message: CONNECT#MAREK 
+sep 14, 2014 6:05:34 PM chatserver.ChatServer send
+INFO: Server sends: ONLINE#marek
+sep 14, 2014 6:05:48 PM chatserver.ChatServer start
+INFO: Connected to a client
+sep 14, 2014 6:05:48 PM chatserver.ClientHandler run
+INFO: Received the message: CONNECT#MAREK2 
+sep 14, 2014 6:05:48 PM chatserver.ChatServer send
+INFO: Server sends: ONLINE#marek,marek2
+sep 14, 2014 6:05:53 PM chatserver.ClientHandler run
+INFO: Received the message: CLOSE# 
+sep 14, 2014 6:05:53 PM chatserver.ChatServer send
+INFO: Server sends: CLOSE#
+sep 14, 2014 6:05:53 PM chatserver.ChatServer send
+INFO: Server sends: ONLINE#marek2
+sep 14, 2014 6:05:53 PM chatserver.ClientHandler decode
+INFO: Closed a Connection with marek
+sep 14, 2014 6:05:59 PM chatserver.ChatServer start
+INFO: Connected to a client
+sep 14, 2014 6:05:59 PM chatserver.ClientHandler run
+INFO: Received the message: CONNECT#MAREK 
+sep 14, 2014 6:05:59 PM chatserver.ChatServer send
+INFO: Server sends: ONLINE#marek,marek2
+sep 14, 2014 6:06:10 PM chatserver.ClientHandler run
+INFO: Received the message: CLOSE# 
+sep 14, 2014 6:06:10 PM chatserver.ChatServer send
+INFO: Server sends: CLOSE#
+sep 14, 2014 6:06:10 PM chatserver.ChatServer send
+INFO: Server sends: ONLINE#marek
+sep 14, 2014 6:06:10 PM chatserver.ClientHandler decode
+INFO: Closed a Connection with marek2
+sep 14, 2014 6:06:11 PM chatserver.ClientHandler run
+INFO: Received the message: CLOSE# 
+sep 14, 2014 6:06:11 PM chatserver.ChatServer send
+INFO: Server sends: CLOSE#
+sep 14, 2014 6:06:11 PM chatserver.ClientHandler decode
+INFO: Closed a Connection with marek
