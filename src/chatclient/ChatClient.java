@@ -54,7 +54,7 @@ public class ChatClient extends Thread
     public void closeTheConnection() throws IOException
     {
         output.println(ProtocolStrings.STOP);
-        stop();
+        //stop();
     }
 
     @Override

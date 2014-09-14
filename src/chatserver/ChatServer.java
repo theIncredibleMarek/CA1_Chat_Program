@@ -55,29 +55,29 @@ public class ChatServer
         {
             case ProtocolStrings.ONLINE:
                 //write back the list of users send("ONLINE#Marek,Smara","*")
-                //In case that the client wants to connect, the server must send back ONLINE and list of connected users
-                msg = msg + ProtocolStrings.DIVIDER;
-                for (Map.Entry<String, ClientHandler> ch : clientHandlers.entrySet())
+                //server should only send back the list of users when somebody is online
+                if (clientHandlers.size() > 0)
                 {
-                    String name = ch.getKey();
-                    msg = msg + name + ",";
+                    //In case that the client wants to connect, the server must send back ONLINE and list of connected users
+                    msg = msg + ProtocolStrings.DIVIDER;
+                    for (Map.Entry<String, ClientHandler> ch : clientHandlers.entrySet())
+                    {
+                        String name = ch.getKey();
+                        msg = msg + name + ",";
+                    }
+                    //At the end the last person will have a comma after his name so we just have to remove it
+                    msg = msg.substring(0, msg.length() - 1);
+                    Logger.getLogger(ChatServer.class.getName()).log(Level.INFO, "Server sends: " + msg);
                 }
-                //At the end the last person will have a comma after his name so we just have to remove it
-                msg = msg.substring(0, msg.length() - 1);
-
                 break;
             case ProtocolStrings.MESSAGE:
-//                //in case the message is sent to everybody the sender should not get it back - we exclude him from the list of recipients
-//                msg = msg + ProtocolStrings.DIVIDER;
-//                for (String s : recipients)
-//                {
-//                    msg = msg + s + ",";
-//                }
-//                //At the end the last person will have a comma after his name so we just have to remove it
-//                msg = msg.substring(0, msg.length() - 1);
+                // in this case the message is built in the client handler so no additions from the server
+                Logger.getLogger(ChatServer.class.getName()).log(Level.INFO, "Server sends: " + msg);
                 break;
             case ProtocolStrings.CLOSE:
+                //send a close message back 
                 msg = msg + ProtocolStrings.DIVIDER;
+                Logger.getLogger(ChatServer.class.getName()).log(Level.INFO, "Server sends: " + msg);
                 break;
             default:
                 break;
@@ -103,14 +103,12 @@ public class ChatServer
                     {
                         ch.getValue().send(msg);
                     }
-                }
-                else
+                } else
                 {
                     ch.getValue().send(msg);
                 }
             }
-        }
-        else
+        } else
         {
             for (String s : recipients)
             {
@@ -119,15 +117,14 @@ public class ChatServer
                     if (msgParts.length > 1)
                     {
                         //send the message but not to the sender itself
-                        if ( ch.getKey().equals(s) && ! ch.getKey().equals(msgParts[1]))
+                        if (ch.getKey().equals(s) && !ch.getKey().equals(msgParts[1]))
                         {
                             ch.getValue().send(msg);
                         }
-                    }
-                    else
+                    } else
                     {
                         //in case that the message is CLOSE it will not have the receivers
-                        if ( ch.getKey().equals(s))
+                        if (ch.getKey().equals(s))
                         {
                             ch.getValue().send(msg);
                         }
@@ -161,8 +158,8 @@ public class ChatServer
         String logFile = properties.getProperty("logFile");
         Utils.setLogFile(logFile, ChatServer.class.getName());
         Logger logger = Utils.getLogger(logFile, ChatServer.class.getName());
-        Logger.getLogger(ChatServer.class.getName()).log(Level.INFO, "Chat server started,\n" +
-                "ip: " + ip + ", listening on port: " + port + ".");
+        Logger.getLogger(ChatServer.class.getName()).log(Level.INFO, "Chat server started,\n"
+                + "ip: " + ip + ", listening on port: " + port + ".");
         clientHandlers = new HashMap<String, ClientHandler>()
         {
         };
